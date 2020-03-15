@@ -1,0 +1,17 @@
+app:
+  clients:
+    ui:
+      client: browser
+      grants:
+        - refresh_token
+        - password
+      scopes:
+        - ui
+    example-service:
+      client: microservice
+      secret: test
+      grants:
+        - client_credentials
+        - refresh_token
+      scopes:
+        - server
