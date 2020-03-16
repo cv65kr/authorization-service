@@ -14,6 +14,7 @@ import java.util.UUID;
 @Data
 @Document(collection = "users")
 public class User implements UserDetails {
+    private static final long serialVersionUID = -2767919014226512337L;
 
     @Id
     private UUID uuid;

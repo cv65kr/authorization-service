@@ -3,21 +3,19 @@ version: '3.7'
 services:
   mongo:
     image: mongo:4.2.3
+    container_name: ${MONGO_INITDB_CONTAINER}
     restart: always
     env_file:
       - .env
-    ports:
-      - "27017:27017"
     volumes:
       - ./etc/mongodb:/docker-entrypoint-initdb.d
       - mongodb_data:/data/db
 
   redis:
     image: redis:5.0.8-alpine
+    container_name: ${REDIS_CONTAINER}
     env_file:
       - .env
-    ports:
-      - "6379:6379"
     command: /bin/sh -c 'redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}'
 
 volumes:

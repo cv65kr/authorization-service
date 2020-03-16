@@ -1,5 +1,6 @@
 package com.kajti.auth.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,11 +10,14 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import java.util.*;
 
 @Data
-@Document
+@Builder
+@Document("auth_client_details")
 public class AuthClientDetails implements ClientDetails {
 
+    private static final long serialVersionUID = -2767919014226512337L;
+
     @Id
-    private UUID id;
+    private UUID uuid;
 
     private String clientId;
 
@@ -40,7 +44,7 @@ public class AuthClientDetails implements ClientDetails {
 
     @Override
     public Set<String> getResourceIds() {
-        return resources != null ? new HashSet<>(Arrays.asList(resources.split(","))) : null;
+        return explode(resources);
     }
 
     @Override
@@ -60,17 +64,17 @@ public class AuthClientDetails implements ClientDetails {
 
     @Override
     public Set<String> getScope() {
-        return scopes != null ? new HashSet<>(Arrays.asList(scopes.split(","))) : null;
+        return explode(scopes);
     }
 
     @Override
     public Set<String> getAuthorizedGrantTypes() {
-        return grantTypes != null ? new HashSet<>(Arrays.asList(grantTypes.split(","))) : null;
+        return explode(grantTypes);
     }
 
     @Override
     public Set<String> getRegisteredRedirectUri() {
-        return redirectUris != null ? new HashSet<>(Arrays.asList(redirectUris.split(","))) : null;
+        return explode(redirectUris);
     }
 
     @Override
@@ -96,5 +100,13 @@ public class AuthClientDetails implements ClientDetails {
     @Override
     public Map<String, Object> getAdditionalInformation() {
         return null;
+    }
+
+    private Set<String> explode(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        return new HashSet<>(Arrays.asList(value.split(",")));
     }
 }
