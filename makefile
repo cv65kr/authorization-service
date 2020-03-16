@@ -27,8 +27,8 @@ up: ## Spin up environment
 		$(compose) up -d
 
 .PHONY: package
-package: ## Maven packakge
-		./etc/export_env.sh && mvn package -Dspring.profiles.active=$(env)
+package: ## Maven package
+		mvn package -Dspring.profiles.active=$(env)
 
 .PHONY: logs
 logs: ## Look for 's' service logs, make s=auth-service logs

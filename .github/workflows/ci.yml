@@ -20,6 +20,16 @@ jobs:
           java-version: 1.8
       - name: Build application with Maven
         run: make env=dev package;
+        env:
+          APP_ENV: dev
+          MONGO_INITDB_CONTAINER: mongodb
+          MONGO_INITDB_DATABASE: users
+          MONGO_INITDB_USERNAME: user
+          MONGO_INITDB_PASSWORD: pass
+          MONGO_INITDB_PORT: 27017
+          REDIS_CONTAINER: redis
+          REDIS_PORT: 6379
+          REDIS_PASSWORD: redis123
       - name: Publish to registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:

@@ -5,6 +5,8 @@ services:
   auth-service:
     image: docker.pkg.github.com/cv65kr/auth-service
     container_name: auth-service
+    env_file:
+      - .env
     ports:
       - "4000:4000"
     depends_on:
