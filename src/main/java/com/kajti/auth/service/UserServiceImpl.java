@@ -3,6 +3,7 @@ package com.kajti.auth.service;
 import com.kajti.auth.config.PasswordEncoderConfig;
 import com.kajti.auth.domain.User;
 import com.kajti.auth.dto.SignUpDto;
+import com.kajti.auth.exception.ResourceNotFoundException;
 import com.kajti.auth.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public void create(SignUpDto user) {
 
         Optional<User> existing = userRepository.findByUsername(user.getUsername());
-        existing.ifPresent(it-> {throw new IllegalArgumentException("user already exists: " + it.getUsername());});
+        existing.ifPresent(it-> {throw new ResourceNotFoundException("user already exists: " + it.getUsername());});
 
         String hash = encoder.encode(user.getPassword());
 
@@ -39,5 +40,10 @@ public class UserServiceImpl implements UserService {
         userRepository.save(newUser);
 
         log.info("new user has been created: {}", user.getUsername());
+    }
+
+    @Override
+    public void deleteAll() {
+        userRepository.deleteAll();
     }
 }

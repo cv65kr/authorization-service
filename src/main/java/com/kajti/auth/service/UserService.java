@@ -5,4 +5,6 @@ import com.kajti.auth.dto.SignUpDto;
 public interface UserService {
 
     void create(SignUpDto user);
+
+    void deleteAll();
 }
