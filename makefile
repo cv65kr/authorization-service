@@ -30,6 +30,10 @@ up: ## Spin up environment
 package: ## Maven package
 		mvn package -Dspring.profiles.active=$(env)
 
+.PHONY: test
+test: ## Run tests
+		mvn clean test -Dspring.profiles.active=$(env)
+
 .PHONY: logs
 logs: ## Look for 's' service logs, make s=auth-service logs
 		$(compose) logs -f $(s)
