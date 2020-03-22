@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
 public class RestStep extends SpringIntegrationTest {
 
@@ -77,6 +78,7 @@ public class RestStep extends SpringIntegrationTest {
     @And("the JSON should be equal to:")
     public void theJSONShouldBeEqualTo(String body) {
         assertThatJson(jsonResponse)
+                .when(IGNORING_ARRAY_ORDER)
                 .withMatcher("timestamp", new TimestampMatcher())
                 .isEqualTo(body);
     }

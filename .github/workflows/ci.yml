@@ -18,7 +18,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Test and build application
-        run: make env=dev test;make env=dev package;
+        run: make env=dev package;
         env:
           APP_ENV: dev
           MONGO_INITDB_CONTAINER: mongodb
