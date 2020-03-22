@@ -3,6 +3,8 @@ package com.kajti.auth.bdd.steps;
 import com.kajti.auth.bdd.SpringIntegrationTest;
 import com.kajti.auth.bdd.config.ClientErrorHandler;
 import com.kajti.auth.bdd.dto.AccessToken;
+import com.kajti.auth.bdd.matcher.TimestampMatcher;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,6 +14,8 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class RestStep extends SpringIntegrationTest {
 
@@ -65,6 +69,18 @@ public class RestStep extends SpringIntegrationTest {
         this.bodyRequest(httpMethod, path, body, false);
     }
 
+    @Then("Then the response status code should be {int}")
+    public void thenTheResponseStatusCodeShouldBe(int statusCode) {
+        Assert.assertEquals(statusCode, jsonStatusCode);
+    }
+
+    @And("the JSON should be equal to:")
+    public void theJSONShouldBeEqualTo(String body) {
+        assertThatJson(jsonResponse)
+                .withMatcher("timestamp", new TimestampMatcher())
+                .isEqualTo(body);
+    }
+
     private void bodyRequest(String httpMethod, String path, String body, boolean isAuthorized) {
         if (!httpMethod.equals(HttpMethod.POST) && httpMethod.equals(HttpMethod.PUT)) {
             throw new IllegalArgumentException("Only PUT or POST method allowed here.");
@@ -87,10 +103,5 @@ public class RestStep extends SpringIntegrationTest {
 
         jsonResponse = response.getBody();
         jsonStatusCode = response.getStatusCodeValue();
-    }
-
-    @Then("Then the response status code should be {int}")
-    public void thenTheResponseStatusCodeShouldBe(int statusCode) {
-        Assert.assertEquals(statusCode, jsonStatusCode);
     }
 }
