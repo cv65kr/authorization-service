@@ -58,6 +58,7 @@ rebuild                        Same as start
 erase                          Stop and delete containers, clean volumes.
 build                          Build environment
 up                             Spin up environment
+ps                             Show containers list
 package                        Maven package
 test                           Run tests
 logs                           Look for 's' service logs, make s=auth-service logs

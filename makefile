@@ -26,6 +26,10 @@ build: ## Build environment
 up: ## Spin up environment
 		$(compose) up -d
 
+.PHONY: ps
+ps: ## Show containers list
+		$(compose) ps -a
+
 .PHONY: package
 package: ## Maven package
 		mvn package -Dspring.profiles.active=$(env)

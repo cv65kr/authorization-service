@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   auth-service:
-    image: docker.pkg.github.com/cv65kr/auth-service
+    image: docker.pkg.github.com/cv65kr/authorization-service/authorization-service
     container_name: auth-service
     env_file:
       - .env
