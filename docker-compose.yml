@@ -10,6 +10,12 @@ services:
     volumes:
       - ./etc/mongodb:/docker-entrypoint-initdb.d
       - mongodb_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo "mongodb://${MONGO_INITDB_USERNAME}:${MONGO_INITDB_PASSWORD}@${MONGO_INITDB_CONTAINER}:${MONGO_INITDB_PORT}/${MONGO_INITDB_DATABASE}" --quiet | grep 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   redis:
     image: redis:5.0.8-alpine
@@ -17,6 +23,11 @@ services:
     env_file:
       - .env
     command: /bin/sh -c 'redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   mongodb_data:

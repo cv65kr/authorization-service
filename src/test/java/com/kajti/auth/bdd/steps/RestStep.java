@@ -83,6 +83,40 @@ public class RestStep extends SpringIntegrationTest {
                 .isEqualTo(body);
     }
 
+    @When("I send a {string} request to {string}")
+    public void requestStep(String httpMethod, String path) {
+        simpleRequest(httpMethod, path, false);
+    }
+
+    @When("I send a authorized {string} request to {string}")
+    public void authorizedRequestStep(String httpMethod, String path) {
+        simpleRequest(httpMethod, path, false);
+    }
+
+    private void simpleRequest(String httpMethod, String path,  boolean isAuthorized) {
+        if (!httpMethod.equals(HttpMethod.GET) && httpMethod.equals(HttpMethod.DELETE)) {
+            throw new IllegalArgumentException("Only GET or DELETE method allowed here.");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if (isAuthorized) {
+            headers.add("Authorization", "Bearer "+accessToken);
+        }
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                url+path,
+                HttpMethod.resolve(httpMethod),
+                request,
+                String.class
+        );
+
+        jsonResponse = response.getBody();
+        jsonStatusCode = response.getStatusCodeValue();
+    }
+
     private void bodyRequest(String httpMethod, String path, String body, boolean isAuthorized) {
         if (!httpMethod.equals(HttpMethod.POST) && httpMethod.equals(HttpMethod.PUT)) {
             throw new IllegalArgumentException("Only PUT or POST method allowed here.");
