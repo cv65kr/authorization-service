@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserStep {
 
+    public static String PASSWORD = "password";
+
     @Autowired
     private UserService userService;
 
@@ -22,7 +24,8 @@ public class UserStep {
 
         SignUpDto signUpDto = new SignUpDto();
         signUpDto.setUsername(username);
-        signUpDto.setPassword("password");
+        signUpDto.setPassword(PASSWORD);
+        signUpDto.setEnabled(true);
 
         userService.create(signUpDto);
     }

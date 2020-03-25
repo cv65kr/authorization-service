@@ -4,6 +4,7 @@ import com.kajti.auth.bdd.SpringIntegrationTest;
 import com.kajti.auth.bdd.config.ClientErrorHandler;
 import com.kajti.auth.bdd.dto.AccessToken;
 import com.kajti.auth.bdd.matcher.TimestampMatcher;
+import com.kajti.auth.bdd.matcher.UuidMatcher;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -60,6 +61,30 @@ public class RestStep extends SpringIntegrationTest {
         accessToken = response.getBody().getAccessToken();
     }
 
+    @Given("There is access token for username {string} provided in the request header")
+    public void getUserTokenStep(String username) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic YnJvd3Nlcjo=");
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        map.add("grant_type", "password");
+        map.add("scope", "ui");
+        map.add("username", username);
+        map.add("password", UserStep.PASSWORD);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<AccessToken> response = restTemplate.exchange(
+                url+"/uaa/oauth/token",
+                HttpMethod.POST,
+                request,
+                AccessToken.class
+        );
+
+        accessToken = response.getBody().getAccessToken();
+    }
+
     @When("I send a authorized {string} request to {string} with body:")
     public void authorizedRequestStep(String httpMethod, String path, String body) {
         this.bodyRequest(httpMethod, path, body, true);
@@ -80,6 +105,7 @@ public class RestStep extends SpringIntegrationTest {
         assertThatJson(jsonResponse)
                 .when(IGNORING_ARRAY_ORDER)
                 .withMatcher("timestamp", new TimestampMatcher())
+                .withMatcher("uuid", new UuidMatcher())
                 .isEqualTo(body);
     }
 
@@ -90,7 +116,7 @@ public class RestStep extends SpringIntegrationTest {
 
     @When("I send a authorized {string} request to {string}")
     public void authorizedRequestStep(String httpMethod, String path) {
-        simpleRequest(httpMethod, path, false);
+        simpleRequest(httpMethod, path, true);
     }
 
     private void simpleRequest(String httpMethod, String path,  boolean isAuthorized) {
