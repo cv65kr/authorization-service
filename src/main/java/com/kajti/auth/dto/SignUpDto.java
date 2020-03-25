@@ -15,4 +15,7 @@ public class SignUpDto {
     @NotNull
     @NotEmpty
     private String password;
+
+    @NotNull
+    private boolean enabled;
 }

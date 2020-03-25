@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
                 .uuid(UUID.randomUUID())
                 .username(user.getUsername())
                 .password(hash)
-                .enabled(true)
+                .enabled(user.isEnabled())
                 .build();
 
         userRepository.save(newUser);

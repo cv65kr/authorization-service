@@ -1,12 +1,25 @@
 Feature: Register user accounts
 
-  Scenario: Successfully register user account
+  Scenario: Successfully register enabled user account
     Given There is access token for service provided in the request header
     When I send a authorized "POST" request to "/uaa/users" with body:
       """
         {
           "username": "test_user",
-          "password": "test_password"
+          "password": "test_password",
+          "enabled": true
+        }
+      """
+    Then Then the response status code should be 200
+
+  Scenario: Successfully register disabled user account
+    Given There is access token for service provided in the request header
+    When I send a authorized "POST" request to "/uaa/users" with body:
+      """
+        {
+          "username": "test_user_disabled",
+          "password": "test_password_disabled",
+          "enabled": false
         }
       """
     Then Then the response status code should be 200
@@ -18,7 +31,8 @@ Feature: Register user accounts
       """
         {
           "username": "test_user",
-          "password": "test_password"
+          "password": "test_password",
+          "enabled": true
         }
       """
     Then Then the response status code should be 409
@@ -39,7 +53,8 @@ Feature: Register user accounts
       """
         {
           "username": "",
-          "password": "test_password"
+          "password": "test_password",
+          "enabled": true
         }
       """
     Then Then the response status code should be 400
@@ -86,7 +101,8 @@ Feature: Register user accounts
     When I send a authorized "POST" request to "/uaa/users" with body:
       """
         {
-          "password": "test_password"
+          "password": "test_password",
+          "enabled": true
         }
       """
     Then Then the response status code should be 400
@@ -158,7 +174,8 @@ Feature: Register user accounts
       """
         {
           "username": "test_user",
-          "password": "test_password"
+          "password": "test_password",
+          "enabled": true
         }
       """
     Then Then the response status code should be 401
