@@ -8,6 +8,7 @@ import com.kajti.auth.service.UserService;
 import com.kajti.auth.service.UserServiceImpl;
 import com.kajti.auth.service.uuid.UUIDGenerator;
 import com.kajti.auth.unit.LogSpy;
+import com.kajti.auth.unit.helper.UserHelper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +34,8 @@ public class UserServiceTests {
 
     UserService userService;
 
+    User userInstance = UserHelper.getUserInstance();
+
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
@@ -47,7 +50,7 @@ public class UserServiceTests {
     @Test
     public void testSuccessfulCreateUser() throws Exception {
         when(userRepository.findByUsername("test")).thenReturn(Optional.empty());
-        when(userRepository.save(getUserInstance())).thenReturn(getUserInstance());
+        when(userRepository.save(userInstance)).thenReturn(userInstance);
         when(UUIDGenerator.generateRandom()).thenReturn(UUID.fromString("6bbdc992-3078-46f4-b7ca-0424f0862a4c"));
 
         SignUpDto signUpDto = new SignUpDto();
@@ -65,7 +68,7 @@ public class UserServiceTests {
         exceptionRule.expect(ResourceAlreadyExistsException.class);
         exceptionRule.expectMessage("user already exists: test");
 
-        when(userRepository.findByUsername("test")).thenReturn(Optional.of(getUserInstance()));
+        when(userRepository.findByUsername("test")).thenReturn(Optional.of(userInstance));
 
         SignUpDto signUpDto = new SignUpDto();
         signUpDto.setUsername("test");
@@ -80,14 +83,5 @@ public class UserServiceTests {
         userService.deleteAll();
 
         assertEquals(true, logSpy.findEvent("user has been deleted"));
-    }
-
-    private User getUserInstance() {
-        return User.builder()
-                .uuid(UUID.fromString("6bbdc992-3078-46f4-b7ca-0424f0862a4c"))
-                .username("test")
-                .password("test")
-                .enabled(true)
-                .build();
     }
 }
