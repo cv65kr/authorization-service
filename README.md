@@ -37,6 +37,16 @@ then go to IntelliJ and follow the instructions below
 
 ![IntelliJ configuration](./docs/images/intellij.png)
 
+## Create server client
+
+To create client eg. for connect with another services, run:
+
+```bash
+make client="account-service" secret="$2y$12$1Xf4lvYLDxYFfJTteebdAuRo4lxrQ1uj1tuhBdDeOPaQstYevfG8u" grants="client_credentials,refresh_token" scopes="server" client
+```
+
+**Secret must be encoded in bcrypt.**
+
 ## Tests
 
 To run all test just use
@@ -62,6 +72,7 @@ ps                             Show containers list
 package                        Maven package
 test                           Run tests
 logs                           Look for 's' service logs, make s=auth-service logs
+client                         Create client for authorization service, available arguments client,secret,grants,scopes
 help                           Display this help message
 ```
 

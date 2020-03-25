@@ -42,6 +42,10 @@ test: ## Run tests
 logs: ## Look for 's' service logs, make s=auth-service logs
 		$(compose) logs -f $(s)
 
+.PHONY: client
+client: ## Create client for authorization service, available arguments client,secret,grants,scopes
+		$(compose) exec mongo bash /create-client.sh "$(client)" "$(secret)" "$(grants)" "$(scopes)"
+
 .PHONY: help
 help: ## Display this help message
 	@cat $(MAKEFILE_LIST) | grep -e "^[a-zA-Z_\-]*: *.*## *" | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

@@ -8,7 +8,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./etc/mongodb:/docker-entrypoint-initdb.d
+      - ./etc/mongodb/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
+      - ./etc/mongodb/create-client.sh:/create-client.sh
       - mongodb_data:/data/db
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo "mongodb://${MONGO_INITDB_USERNAME}:${MONGO_INITDB_PASSWORD}@${MONGO_INITDB_CONTAINER}:${MONGO_INITDB_PORT}/${MONGO_INITDB_DATABASE}" --quiet | grep 1
