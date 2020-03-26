@@ -1,5 +1,6 @@
 package com.kajti.auth.domain;
 
+import com.kajti.auth.helper.SplitString;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -44,7 +45,7 @@ public class AuthClientDetails implements ClientDetails {
 
     @Override
     public Set<String> getResourceIds() {
-        return explode(resources);
+        return SplitString.execute(resources);
     }
 
     @Override
@@ -64,17 +65,17 @@ public class AuthClientDetails implements ClientDetails {
 
     @Override
     public Set<String> getScope() {
-        return explode(scopes);
+        return SplitString.execute(scopes);
     }
 
     @Override
     public Set<String> getAuthorizedGrantTypes() {
-        return explode(grantTypes);
+        return SplitString.execute(grantTypes);
     }
 
     @Override
     public Set<String> getRegisteredRedirectUri() {
-        return explode(redirectUris);
+        return SplitString.execute(redirectUris);
     }
 
     @Override
@@ -100,13 +101,5 @@ public class AuthClientDetails implements ClientDetails {
     @Override
     public Map<String, Object> getAdditionalInformation() {
         return null;
-    }
-
-    private Set<String> explode(String value) {
-        if (value == null) {
-            return null;
-        }
-
-        return new HashSet<>(Arrays.asList(value.split(",")));
     }
 }

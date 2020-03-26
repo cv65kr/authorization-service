@@ -1,7 +1,6 @@
 package com.kajti.auth.unit.service;
 
 import com.kajti.auth.domain.AuthClientDetails;
-import com.kajti.auth.exception.ResourceAlreadyExistsException;
 import com.kajti.auth.exception.ResourceNotExistsException;
 import com.kajti.auth.repository.AuthClientRepository;
 import com.kajti.auth.service.AuthClientDetailsService;

@@ -1,4 +1,4 @@
-package com.kajti.auth.unit.helper;
+package com.kajti.auth.helper;
 
 import com.kajti.auth.domain.User;
 

@@ -1,10 +1,9 @@
 package com.kajti.auth.unit.service.security;
 
 import com.kajti.auth.domain.User;
-import com.kajti.auth.exception.ResourceAlreadyExistsException;
+import com.kajti.auth.helper.UserHelper;
 import com.kajti.auth.repository.UserRepository;
 import com.kajti.auth.service.security.MongoUserDetailsService;
-import com.kajti.auth.unit.helper.UserHelper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
