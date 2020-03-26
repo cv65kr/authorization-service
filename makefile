@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := help
+
 env=dev
 compose=docker-compose -f docker-compose.yml -f docker-compose.$(env).yml
 
@@ -43,7 +45,7 @@ logs: ## Look for 's' service logs, make s=auth-service logs
 		$(compose) logs -f $(s)
 
 .PHONY: client
-client: ## Create client for authorization service, available arguments client,secret,grants,scopes
+client: ## Create client, available arguments client,secret,grants,scopes
 		$(compose) exec mongo bash /create-client.sh "$(client)" "$(secret)" "$(grants)" "$(scopes)"
 
 .PHONY: help

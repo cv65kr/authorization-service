@@ -4,7 +4,7 @@
 
 Simple open source Authorization microservice. This service is used for user authorization as well as for secure machine-to-machine communication inside a perimeter. Uses Redis for token and MongoDB for user account data keeping. The highest quality of code, strong testing culture.
 
-![Schema](./docs/images/schema.png)
+![Infrastructure schema](./docs/images/schema.png)
 
 # How use
 
@@ -47,6 +47,13 @@ make client="account-service" secret="$2y$12$1Xf4lvYLDxYFfJTteebdAuRo4lxrQ1uj1tu
 
 **Secret must be encoded in bcrypt.**
 
+## Endpoint
+
+Method	| Path	| Description
+------------- | ------------------------- | ------------- |
+GET	| /users/current	| Get current user data
+POST	| /users	| Create new user
+
 ## Tests
 
 To run all test just use
@@ -72,7 +79,7 @@ ps                             Show containers list
 package                        Maven package
 test                           Run tests
 logs                           Look for 's' service logs, make s=auth-service logs
-client                         Create client for authorization service, available arguments client,secret,grants,scopes
+client                         Create client, available arguments client,secret,grants,scopes
 help                           Display this help message
 ```
 
