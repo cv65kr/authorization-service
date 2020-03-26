@@ -18,4 +18,5 @@ public class SpringIntegrationTest {
     @LocalServerPort
     protected int port = 4000;
 
+    protected String url = "http://localhost:"+port;
 }

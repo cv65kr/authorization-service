@@ -16,6 +16,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
@@ -23,7 +26,7 @@ public class RestStep extends SpringIntegrationTest {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    private String url = "http://localhost:"+port;
+    private Map<String, String> providedHeaders = new TreeMap<>();
 
     private String accessToken;
 
@@ -40,49 +43,9 @@ public class RestStep extends SpringIntegrationTest {
         restTemplate.setRequestFactory(requestFactory);
     }
 
-    @Given("There is access token for service provided in the request header")
-    public void getServiceTokenStep() {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic c2VydmljZTpzZXJ2aWNlLXBhc3N3b3Jk");
-
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("grant_type", "client_credentials");
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-        ResponseEntity<AccessToken> response = restTemplate.exchange(
-            url+"/uaa/oauth/token",
-            HttpMethod.POST,
-            request,
-            AccessToken.class
-        );
-
-        accessToken = response.getBody().getAccessToken();
-    }
-
-    @Given("There is access token for username {string} provided in the request header")
-    public void getUserTokenStep(String username) {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic YnJvd3Nlcjo=");
-
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("grant_type", "password");
-        map.add("scope", "ui");
-        map.add("username", username);
-        map.add("password", UserStep.PASSWORD);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-        ResponseEntity<AccessToken> response = restTemplate.exchange(
-                url+"/uaa/oauth/token",
-                HttpMethod.POST,
-                request,
-                AccessToken.class
-        );
-
-        accessToken = response.getBody().getAccessToken();
+    @Given("There is provided header with {string} key and value {string}")
+    public void addHeader(String key, String value) {
+        providedHeaders.put(key, value);
     }
 
     @When("I send a authorized {string} request to {string} with body:")
@@ -119,15 +82,59 @@ public class RestStep extends SpringIntegrationTest {
         simpleRequest(httpMethod, path, true);
     }
 
-    private void simpleRequest(String httpMethod, String path,  boolean isAuthorized) {
-        if (!httpMethod.equals(HttpMethod.GET) && httpMethod.equals(HttpMethod.DELETE)) {
-            throw new IllegalArgumentException("Only GET or DELETE method allowed here.");
-        }
+    @Given("There is access token for service provided in the request header")
+    public void getServiceTokenStep() {
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic c2VydmljZTpzZXJ2aWNlLXBhc3N3b3Jk");
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        map.add("grant_type", "client_credentials");
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<AccessToken> response = restTemplate.exchange(
+                url+"/uaa/oauth/token",
+                HttpMethod.POST,
+                request,
+                AccessToken.class
+        );
+
+        accessToken = response.getBody().getAccessToken();
+    }
+
+    @Given("There is access token for username {string} provided in the request header")
+    public void getUserTokenStep(String username) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic YnJvd3Nlcjo=");
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        map.add("grant_type", "password");
+        map.add("scope", "ui");
+        map.add("username", username);
+        map.add("password", UserStep.PASSWORD);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<AccessToken> response = restTemplate.exchange(
+                url+"/uaa/oauth/token",
+                HttpMethod.POST,
+                request,
+                AccessToken.class
+        );
+
+        accessToken = response.getBody().getAccessToken();
+    }
+
+    private void simpleRequest(String httpMethod, String path,  boolean isAuthorized) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         if (isAuthorized) {
             headers.add("Authorization", "Bearer "+accessToken);
+        }
+        for (Map.Entry<String, String> entry : providedHeaders.entrySet()) {
+            headers.add(entry.getKey(), entry.getValue());
         }
 
         HttpEntity<String> request = new HttpEntity<>(headers);
@@ -144,14 +151,13 @@ public class RestStep extends SpringIntegrationTest {
     }
 
     private void bodyRequest(String httpMethod, String path, String body, boolean isAuthorized) {
-        if (!httpMethod.equals(HttpMethod.POST) && httpMethod.equals(HttpMethod.PUT)) {
-            throw new IllegalArgumentException("Only PUT or POST method allowed here.");
-        }
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         if (isAuthorized) {
             headers.add("Authorization", "Bearer "+accessToken);
+        }
+        for (Map.Entry<String, String> entry : providedHeaders.entrySet()) {
+            headers.add(entry.getKey(), entry.getValue());
         }
 
         HttpEntity<String> request = new HttpEntity<>(body, headers);
