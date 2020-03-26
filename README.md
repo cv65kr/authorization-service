@@ -42,12 +42,12 @@ then go to IntelliJ and follow the instructions below
 To create client eg. for connect with another services, run:
 
 ```bash
-make client="account-service" secret="$2y$12$1Xf4lvYLDxYFfJTteebdAuRo4lxrQ1uj1tuhBdDeOPaQstYevfG8u" grants="client_credentials,refresh_token" scopes="server" client
+make client='account-service' secret='$$2y$$12$$1Xf4lvYLDxYFfJTteebdAuRo4lxrQ1uj1tuhBdDeOPaQstYevfG8u' grants='client_credentials,refresh_token' scopes='server' client
 ```
 
-**Secret must be encoded in bcrypt.**
+**Secret must be encoded in bcrypt and escaped.**
 
-## Endpoint
+## Endpoints
 
 Method	| Path	| Description
 ------------- | ------------------------- | ------------- |
