@@ -157,8 +157,9 @@
 				</dependencies>
 				<configuration>
 					<repository>cv65kr/authorization-service</repository>
+					<tag>${env.JAVA_VERSION}</tag>
 					<buildArgs>
-						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+						<JAVA_VERSION>${env.JAVA_VERSION}</JAVA_VERSION>
 					</buildArgs>
 				</configuration>
 				<executions>

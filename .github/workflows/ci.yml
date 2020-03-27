@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 8, 10, 11, 12, 13 ]
+        java: [ 8, 12, 13 ]
     steps:
       - uses: actions/checkout@v2
       - name: Build depend containers
@@ -32,6 +32,7 @@ jobs:
           REDIS_CONTAINER: redis
           REDIS_PORT: 6379
           REDIS_PASSWORD: redis123
+          JAVA_VERSION: ${{ matrix.java }}
       - name: Publish to github registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -39,5 +40,5 @@ jobs:
           name: cv65kr/authorization-service/authorization-service:${{ matrix.java }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          buildargs: JAVA_VERSION=${{ matrix.java }}
           tag_names: true
+          buildargs: JAVA_VERSION=${{ matrix.java }}
