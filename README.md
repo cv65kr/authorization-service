@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/cv65kr/authorization-service/workflows/CI/badge.svg?branch=master)
 
-Simple open source Authorization microservice. This service is used for user authorization as well as for secure machine-to-machine communication inside a perimeter. Uses Redis for token and MongoDB for user account data keeping. The highest quality of code, strong testing culture.
+Simple open source Authorization microservice. This service is used for user authorization as well as for secure machine-to-machine communication inside a perimeter. Uses Redis for token and MongoDB for user account data keeping. The highest quality of code, strong testing culture. Supported with Java 8, 12, 13.
 
 ![Infrastructure schema](./docs/images/schema.png)
 
