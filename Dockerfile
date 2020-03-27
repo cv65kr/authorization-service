@@ -1,4 +1,6 @@
-FROM openjdk:8-alpine
+ARG JAVA_VERSION
+
+FROM openjdk:${JAVA_VERSION}-alpine
 
 ADD ./target/auth-1.0.0.jar /app/auth-service.jar
 

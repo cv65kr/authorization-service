@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 8 ]
-        #java: [ 8, 10, 11, 12, 13 ]
+        java: [ 8, 10, 11, 12, 13 ]
     steps:
       - uses: actions/checkout@v2
       - name: Build depend containers
@@ -37,7 +36,8 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           registry: docker.pkg.github.com
-          name: cv65kr/authorization-service/authorization-service
+          name: cv65kr/authorization-service/authorization-service:${{ matrix.java }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          tag_semver: true
+          buildargs: JAVA_VERSION=${{ matrix.java }}
+          tag_names: true
